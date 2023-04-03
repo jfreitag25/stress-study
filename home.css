@@ -43,16 +43,16 @@ body{
 }
 
 h1{
-    font-size: 20px;
+    font-size: 30px;
     color: #36454F;
     font-weight: 600;
     text-transform: capitalize;
 }
 
 h3{
-    font-size: 20px;
+    font-size: 30px;
     color: #36454F;
-    font-weight: 300;
+    font-weight: 600;
     text-transform: capitalize;
 }
 
