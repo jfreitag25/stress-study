@@ -1,0 +1,101 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  *:focus{
+    outline: none;
+  }
+  
+  body{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    background-size: cover;
+    font-family: 'roboto', sans-serif;
+  }
+  
+  .form{
+    width: 400px;
+    height: auto;
+    color: #36454F;
+    font-family: 'roboto', sans-serif;
+  }
+  
+  .heading{
+    text-transform: capitalize;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 50px;
+  }
+  
+  input,
+  .submit{
+    width: 80%;
+    height: 35px;
+    display: block;
+    margin: 20px auto;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 255);
+    border: none;
+    color: #36454F;
+    padding: 15px;
+  }
+  
+  input::placeholder{
+    color: #36454F;
+  }
+  
+  input:focus,
+  .submit:hover{
+    background: #fff;
+    color: #000;
+  }
+  
+  input:focus::placeholder{
+    color: #000;
+  }
+  
+  .submit{
+    width: auto;
+    padding: 0 20px;
+    cursor: pointer;
+    margin: 50px auto 0;
+  }
+  
+  .link{
+    text-align: center;
+    text-transform: capitalize;
+    color:#36454F;
+    display: block;
+    margin: 30px auto;
+  }
+  
+  .link:hover{
+    color: black;
+  }
+  
+  .alert{
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 150px;
+    max-width: 90%;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    text-transform: capitalize;
+    background: rgb(255, 167, 167);
+    border-radius: 5px;
+    color: #36454F;
+    font-family: 'roboto', sans-serif;
+    text-align: center;
+  }

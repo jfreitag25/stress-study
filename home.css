@@ -1,0 +1,94 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    background-size: cover;
+    font-family: 'roboto', sans-serif;
+}
+
+.container{
+    position: relative;
+    width: 90%;
+    height: 87vh;
+    border: 5px solid #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logout{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    text-transform: capitalize;
+    font-size: 16px;
+    color: #36454F;
+    text-decoration: underline;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    border: none;
+}
+
+h1{
+    font-size: 20px;
+    color: #36454F;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+h3{
+    font-size: 20px;
+    color: #36454F;
+    font-weight: 300;
+    text-transform: capitalize;
+}
+
+.nav {
+    background-color: #333;
+    overflow: hidden;
+}
+  
+.nav a {
+    float: left;
+    display: block;
+    background-color: aliceblue;
+    color: #36454F;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+  
+.nav a:hover {
+    background-color: #36454F;
+    color: aliceblue;
+}
+
+.nav a:active {
+    background-color: #36454F;
+    color: aliceblue;
+}
+
+.nav a.split {
+    float: right;
+    background-color: aliceblue;
+    color: #36454F;
+  }
+  
+  /* Hide the link that should open and close the topnav on small screens */
+.nav.icon {
+    display: none;
+  }
