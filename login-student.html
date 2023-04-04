@@ -1,4 +1,4 @@
-<!-- link to participant db: https://docs.google.com/spreadsheets/d/1wEV73KDAlCXaljfLkqUhbhChDyusrJqWPt2Ds_SJ-BU/edit?usp=sharing -->
+<!-- link to participant db: https://docs.google.com/spreadsheets/d/1OK_iDIMp0npjjwcfRXdFX6IkRgwSR2sL2p5AzoStOIM/edit?usp=sharing -->
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -30,7 +30,7 @@
 
       async function getResponse() {
         const response = await fetch(
-          "https://api.apispreadsheets.com/data/3GWRr55d1ylSQjYJ/?query=select User_ID from rX8r8Q1tBUBHtnuM where User_Email='"+email+"' and User_PW='"+password+"'"
+          "https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/?query=select User_ID from mtbRraVZyHWmEIQf where User_Email='"+email+"' and User_PW='"+password+"'"
         );
         console.log(response);
         if (!response.ok) {

@@ -1,4 +1,4 @@
-<!-- link to participant db: https://docs.google.com/spreadsheets/d/1wEV73KDAlCXaljfLkqUhbhChDyusrJqWPt2Ds_SJ-BU/edit?usp=sharing -->
+<!-- link to participant db: https://docs.google.com/spreadsheets/d/1OK_iDIMp0npjjwcfRXdFX6IkRgwSR2sL2p5AzoStOIM/edit?usp=sharing -->
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
@@ -42,7 +42,7 @@
       }
 
       if (email != "" && password != "" && firstName != "" && lastName != "") {
-          fetch("https://api.apispreadsheets.com/data/3GWRr55d1ylSQjYJ/", {
+          fetch("https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/", {
           method: "POST",
           body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password}}),
           }).then(res =>{
@@ -67,7 +67,7 @@
     document.getElementById("rln").value=""; 
 
 			// $.ajax({
-			// 	url:"https://api.apispreadsheets.com/data/3GWRr55d1ylSQjYJ/",
+			// 	url:"https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/",
 			// 	type:"post",
 			// 	data:$("#registerForm").serializeArray(),
 			// 	success: function(){
