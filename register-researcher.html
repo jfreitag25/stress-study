@@ -41,7 +41,7 @@
         }
         // Add user data to spreadsheet
         if (email != "" && password != "" && firstName != "" && lastName != "") {
-            fetch("https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/", {
+            fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
             method: "POST",
             body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password,"User_Type":"researcher"}}),
             }).then(res =>{
