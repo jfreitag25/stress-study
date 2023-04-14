@@ -14,7 +14,7 @@
   </script>
 	<script>
 		function SubForm (){
-
+      // Hash function
       function hash(string) {
         var hash = 0;
         if (string.length == 0) return hash;
@@ -33,18 +33,18 @@
       console.log(email);
       console.log(password);
 
-    // Generate UUID
+      // Generate UUID
       function CreateUUID() {
           return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
        });
       }
-
+      // Add user data to spreadsheet
       if (email != "" && password != "" && firstName != "" && lastName != "") {
           fetch("https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/", {
           method: "POST",
-          body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password}}),
+          body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password,"User_Type":"student"}}),
           }).then(res =>{
           if (res.status === 201){
             alert("Account successfully made!")
@@ -65,26 +65,6 @@
     document.getElementById("rp").value=""; 
     document.getElementById("rfn").value=""; 
     document.getElementById("rln").value=""; 
-
-			// $.ajax({
-			// 	url:"https://api.apispreadsheets.com/data/mtbRraVZyHWmEIQf/",
-			// 	type:"post",
-			// 	data:$("#registerForm").serializeArray(),
-			// 	success: function(){
-      //     if (email != "" && password != "") {
-      //       alert("Account successfully made!")
-      //       window.location.href = "index.html"
-      //     }
-			// 	},
-			// 	error: function(){
-      //     if (email == "") {
-      //       alert("Please enter your email")
-      //     }
-      //     else if (password == "") {
-      //       alert("Please enter your password")
-      //     }
-			// 	}
-			// });
       }
 
   </script>
@@ -100,7 +80,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-link active" aria-current="page" href="login-student.html">Student</a>
-            <!-- <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a> -->
+            <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a>
           </div>
         </div>
       </div>
@@ -111,7 +91,7 @@
     </div> -->
 
     <div id="registerForm">
-      <h1 class="heading">Create Account</h1>
+      <h1 class="heading">Create Student Account</h1>
         <input id="re" name="User_Email" type="email" placeholder="Enter Email" class="email" required>
         <input id="rfn" name="User_FirstName" type="text" placeholder="First Name" class="firstName" required>
         <input id="rln" name="User_LastName" type="text" placeholder="Last Name" class="lastName" required>

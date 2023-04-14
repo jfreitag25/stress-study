@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="form.css">
 
   <script>
-      // read the rows in the spreadsheet and compare the login credentials against the rows and return an ID if it exists
+    // Read the rows in the spreadsheet, compare the login credentials against the rows and return an ID if it exists
     function SubForm() {
       function hash(string) {
         var hash = 0;
@@ -43,11 +43,11 @@
             alert("You're logged in!"); 
             var userId = data.data[0].User_ID;
             console.log("user id: " + userId);
-            // Store user ID in a cookie or session variable
+            // Store user ID in a cookie
             document.cookie = "userId=" + userId;
             console.log(document.cookie);
             window.localStorage.setItem('stress_analytics', userId);
-            window.location.href = "index.html";
+            window.location.href = "index-student.html";
           }
           else {
             alert("Invalid email or password");
@@ -70,7 +70,7 @@
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
           <a class="nav-link active" aria-current="page" href="login-student.html">Student</a>
-          <!-- <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a> -->
+          <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a>
         </div>
       </div>
     </div>
