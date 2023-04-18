@@ -23,6 +23,7 @@
 
       var email = document.getElementById("se_researcher").value;
       var password = hash(document.getElementById("sp_researcher").value);
+      var studyID = hash(document.getElementById("si_researcher").value);
 
       console.log(email);
       console.log(password);
@@ -79,6 +80,7 @@
     <h1 class="heading">login</h1>
     <input id="se_researcher" type="email" placeholder="Email" autocomplete="off" class="email" required>
     <input id="sp_researcher" type="password" placeholder="Password" autocomplete="off" class="password" required>
+    <input id="si_researcher" type="text" placeholder="Study ID" autocomplete="off" class="studyID" required>
     <button type="submit" onclick="SubForm()" class="submit">Log In</button>
     <a href="register-researcher.html" class="link">Don't have an account? Create account</a>
 
