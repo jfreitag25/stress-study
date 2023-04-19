@@ -28,6 +28,7 @@
 
       console.log(email);
       console.log(password);
+      console.log(studyID);
 
       // Get User ID from login info
       async function getResponse() {
@@ -50,6 +51,21 @@
             window.localStorage.setItem('stress_analytics', userId);
             
             // Get StudyID from Studies DB
+            fetch("https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/?query=select Study_ID from kRoqVhKOVuV6LF4x where Study_ID='"+studyID+"'").then(res=>{
+            if (res.status === 200){
+              // SUCCESS
+              res.json().then(data=>{
+                const data = data
+                var studyId = data.data[0].Study_ID;
+                console.log("study id: " + studyId);
+              }).catch(err => console.log(err))
+            }
+            else{
+              // ERROR
+            }
+          })
+
+
             async function getStudyIDResponse() {
               const response = await fetch("https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/?query=select Study_ID from kRoqVhKOVuV6LF4x where Study_ID='"+studyID+"'"
               );
@@ -72,12 +88,12 @@
                       alert("Study ID added")
                       window.location.href = "index.html"
                   }
-                else {
+                  else {
                   alert("Invalid study ID");
-                }
-              })
+                  }
+                })
+              } 
             }
-          }
             getStudyIDResponse();
           }
           }
@@ -86,8 +102,8 @@
           }
         }
       }
-    }
       getResponse();
+    }
 
       
   </script>
