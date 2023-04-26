@@ -14,6 +14,8 @@
   </script>
 	<script>
 		function SubForm (){
+      const urlUsers = "https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/"; // Update URL as needed
+
       // Hash function
       function hash(string) {
         var hash = 0;
@@ -42,7 +44,7 @@
       }
       // Add user data to spreadsheet
       if (email != "" && password != "" && firstName != "" && lastName != "") {
-          fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
+          fetch(urlUsers, {
           method: "POST",
           body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password,"User_Type":"student"}}),
           }).then(res =>{
