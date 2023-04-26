@@ -11,6 +11,7 @@
   <script>
     // Read the rows in the spreadsheet, compare the login credentials against the rows and return an ID if it exists
     function SubForm() {
+      // Hash function for password
       function hash(string) {
         var hash = 0;
         if (string.length == 0) return hash;
@@ -23,89 +24,73 @@
       }
 
       var email = document.getElementById("se").value;
-      var password = hash(document.getElementById("sp").value);
-      var studyID = hash(document.getElementById("si").value);
+      var password = hash(document.getElementById("sp").value); // Hash PW
+      var studyID = document.getElementById("si").value;
 
       console.log(email);
       console.log(password);
       console.log(studyID);
 
-      // Get User ID from login info
+      // Fetch data from Users DB and Studies DB
       async function getResponse() {
-        const response = await fetch(
-          "https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/?query=select User_ID from h3BUx4gyjgxHR0H4 where User_Email='"+email+"' and User_PW='"+password+"'"
-        );
-        console.log(response);
-        if (!response.ok) {
-          alert("Invalid email or password");
-          throw new Error(`HTTP error! status: ${response.status}`)
+        const UsersAPIKey = "h3BUx4gyjgxHR0H4"; // Update key as needed
+        const StudiesAPIKey = "kRoqVhKOVuV6LF4x"; // Update key as needed
+        const urlUsers = "https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/"; // Update URL as needed
+        const urlStudies = "https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/"; // Update URL as needed
+
+        // Initiate fetch calls from both spreadsheets at once
+        const responses = await Promise.all([
+          fetch(`${urlUsers}?query=select User_ID from ${UsersAPIKey} where User_Email='${email}' and User_PW='${password}'`),
+          fetch(`${urlStudies}?query=select Study_ID from ${StudiesAPIKey} where Study_ID='${studyID}'`)]);
+        // Validate responses           
+        console.log(responses);
+        if (!responses[0].ok || !responses[1].ok) {
+          alert("Invalid login info");
+          throw new Error(`HTTP error! status: ${responses.status}`)
         }
         else {
-          const data = await response.json();
-          if (data.data.length > 0) {
-            var userId = data.data[0].User_ID;
-            console.log("user id: " + userId);
-            // Store user ID in a cookie
-            document.cookie = "userId=" + userId;
-            console.log(document.cookie);
-            window.localStorage.setItem('stress_analytics', userId);
-            
-            // Get StudyID from Studies DB
-            fetch("https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/?query=select Study_ID from kRoqVhKOVuV6LF4x where Study_ID='"+studyID+"'").then(res=>{
-            if (res.status === 200){
-              // SUCCESS
-              res.json().then(data=>{
-                const data = data
-                var studyId = data.data[0].Study_ID;
-                console.log("study id: " + studyId);
-              }).catch(err => console.log(err))
-            }
-            else{
-              // ERROR
-            }
-          })
+          const dataUser = await responses[0].json();
+          const dataStudy = await responses[1].json();
+          console.log("dataUser: " + dataUser);
+          console.log("dataStudy: " + dataStudy);
 
+          if (dataUser.data.length > 0 && dataStudy.data.length > 0) {
+              // Get user ID
+              var userId = dataUser.data[0].User_ID;
+              console.log("user id: " + userId);
+              var userLastName = dataUser.data[0].User_LastName;
+              var userFirstName = dataUser.data[0].User_FirstName;
+              // Store user ID in a cookie
+              document.cookie = "userId=" + userId;
+              console.log(document.cookie);
+              // Store user ID in local storage
+              window.localStorage.setItem('stress_analytics', userId);
+              alert("You're logged in!"); 
 
-            async function getStudyIDResponse() {
-              const response = await fetch("https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/?query=select Study_ID from kRoqVhKOVuV6LF4x where Study_ID='"+studyID+"'"
-              );
-              console.log(response);
-              if (!response.ok) {
-                alert("Invalid study ID");
-                throw new Error(`HTTP error! status: ${response.status}`)
-              }
-            else {
-                const data = await response.json();
-                if (data.data.length > 0) {
-                  alert("You're logged in!"); 
-                  var studyId = data.data[0].Study_ID;
-                  console.log("study id: " + studyId);
-                  fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
-                  method: "POST",
-                  body: JSON.stringify({"data": {"Study_ID":studyID}}),
-                  }).then(res =>{
+              // Get study ID
+              var studyId = dataStudy.data[0].Study_ID;
+              console.log("study id: " + studyId);
+              // Update Users spreadsheet with study ID
+              fetch(urlUsers, {
+              method: "POST",
+              body: JSON.stringify({
+                  "data": {"User_ID":userId,"User_PW":password,"Study_ID":studyID,"User_Type":"student","User_Email":email,"User_LastName":userLastName,"User_FirstName":userFirstName}, 
+                  "query": `select * from ${UsersAPIKey} where User_ID='${userId}'`}),
+              })
+              .then(res => {
                   if (res.status === 201){
-                      alert("Study ID added")
                       window.location.href = "index.html"
                   }
                   else {
-                  alert("Invalid study ID");
+                      alert("Invalid study ID");
                   }
-                })
-              } 
-            }
-            getStudyIDResponse();
-          }
-          }
-          else {
-            alert("Invalid login");
+              })
           }
         }
+        
       }
       getResponse();
-    }
-
-      
+  }
   </script>
 
 </head>

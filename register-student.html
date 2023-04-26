@@ -86,10 +86,6 @@
       </div>
     </nav>
 
-    <!-- <div class="alert-box">
-        <p class="alert"></p>
-    </div> -->
-
     <div id="registerForm">
       <h1 class="heading">Create Student Account</h1>
         <input id="re" name="User_Email" type="email" placeholder="Enter Email" class="email" required>
@@ -100,77 +96,3 @@
       <a href="login-student.html" class="link">Already have an account? Log In</a>
     </div>
   </body>
-    
-      <!-- <div>
-        <h1 class="heading">Create Account</h1>
-        <form method="POST" action="https://script.google.com/macros/s/AKfycbzvLQt_MlsiEQCcBxGg1YGId5yIGNXwh3Xn7kQZG2tK2bGRiF9B1_qJVkCYTPEhmiiAOw/exec"></form>
-        <input id="re" name="User_Email" type="email" placeholder="Enter Email" autocomplete="off" class="email" required>
-        <input id="rp" name="User_PW" type="password" placeholder="Enter Password" autocomplete="off" class="password" required>
-        <input id="rrp" type="password" placeholder="Confirm Password" autocomplete="off" class="confirm password" required>
-        <button id="submit" onclick="register()" value="Submit" class="submit" type="submit">Create Account</button>
-      </form>
-      <a href="login-student.html" class="link">Already have an account? Log In</a>
-      </div> -->
-
-  <!-- </div>
-  <script>
-    function register(){
-    // event.preventDefault();
-    var email = document.getElementById("re").value;
-    var password = document.getElementById("rp").value;
-    // var passwordRetype = document.getElementById("rrp").value;
-
-    if (email == ""){
-        alert("Email required.");
-        return ;
-    }
-    else if (password == ""){
-        alert("Password required.");
-        return ;
-    }
-    // else if (passwordRetype == ""){
-    //     alert("Password required.");
-    //     return ;
-    // }
-    // else if ( password != passwordRetype ){
-    //     alert("Passwords don't match");
-    //     return;
-    // }
-    else if(true){
-
-        const form = document.querySelector("#form")
-        const submitButton = document.querySelector("#submit")
-
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbzvLQt_MlsiEQCcBxGg1YGId5yIGNXwh3Xn7kQZG2tK2bGRiF9B1_qJVkCYTPEhmiiAOw/exec'
-
-        submitButton.disabled = true
-        let requestBody = {
-          email, password
-        }
-        console.log(requestBody)
-        fetch(scriptURL, {method: 'POST', body: requestBody} )
-        .then(response => {
-              alert('Success!', response)
-              console.log(response.body)
-              submitButton.disabled = false
-        })
-        .catch(error => {
-        alert('Error!', error.message)
-        submitButton.disabled = false
-        })
-
-        alert("Thanks for making an account!");
-
-        window.location.href("login-student.html");
-
-        document.getElementById("re").value ="";
-        document.getElementById("rp").value="";
-        document.getElementById("rrp").value="";
-    }
-    else{
-        alert("Your email is already associated with an account");
-        return ;
-    }
-} -->
-  
-<!-- </body> -->
