@@ -48,15 +48,18 @@
     color: #36454F;
     padding: 15px;
   }
+  .submit:hover{
+    background: #36454F;
+    color: rgba(255, 255, 255, 255);
+  }
   
   input::placeholder{
     color: #36454F;
   }
   
-  input:focus,
-  .submit:hover{
-    background: #fff;
-    color: #000;
+  input:focus{
+    background: rgba(255, 255, 255, 255);
+    color: #36454F;
   }
   
   input:focus::placeholder{

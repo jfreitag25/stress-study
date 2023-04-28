@@ -88,7 +88,19 @@ h3{
     color: #36454F;
   }
   
-  /* Hide the link that should open and close the topnav on small screens */
+/* Hide the link that should open and close the topnav on small screens */
 .nav.icon {
     display: none;
   }
+
+#button {
+    color: rgba(255, 255, 255, 255);
+    background: #36454F;
+    border: none;
+    margin-top: 10px;
+}
+#button:hover {
+    background: rgba(255, 255, 255, 255);
+    color: #36454F;
+    border: none;
+}
