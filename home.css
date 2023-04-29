@@ -93,13 +93,13 @@ h3{
     display: none;
   }
 
-#button {
+#btn {
     color: rgba(255, 255, 255, 255);
     background: #36454F;
     border: none;
     margin-top: 10px;
 }
-#button:hover {
+#btn:hover {
     background: rgba(255, 255, 255, 255);
     color: #36454F;
     border: none;
