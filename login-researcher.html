@@ -24,71 +24,40 @@
 
       var email = document.getElementById("se_researcher").value;
       var password = hash(document.getElementById("sp_researcher").value);
-      var studyID = hash(document.getElementById("si_researcher").value);
 
       console.log(email);
       console.log(password);
-      console.log(studyID);
 
       // Fetch data from Users DB and Studies DB
       async function getResponse() {
         const UsersAPIKey = "h3BUx4gyjgxHR0H4"; // Update key as needed
-        const StudiesAPIKey = "kRoqVhKOVuV6LF4x"; // Update key as needed
         const urlUsers = "https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/"; // Update URL as needed
-        const urlStudies = "https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/"; // Update URL as needed
 
         // Initiate fetch calls from both spreadsheets at once
-        const responses = await Promise.all([
-          fetch(`${urlUsers}?query=select User_ID from ${UsersAPIKey} where User_Email='${email}' and User_PW='${password}'`),
-          fetch(`${urlStudies}?query=select Study_ID from ${StudiesAPIKey} where Study_ID='${studyID}'`)]);
+        const response = await Promise.all([
+          fetch(`${urlUsers}?query=select User_ID from ${UsersAPIKey} where User_Email='${email}' and User_PW='${password}'`)]);
         // Validate responses           
-        console.log(responses);
-        if (!responses[0].ok || !responses[1].ok) {
+        console.log(response);
+        if (!response[0].ok) {
           alert("Invalid login info");
           throw new Error(`HTTP error! status: ${responses.status}`)
         }
         else {
-          const dataUser = await responses[0].json();
-          const dataStudy = await responses[1].json();
+          const dataUser = await response[0].json();
           console.log("dataUser: " + dataUser);
-          console.log("dataStudy: " + dataStudy);
 
-          if (dataUser.data.length > 0 && dataStudy.data.length > 0) {
+          if (dataUser.data.length > 0) {
               // Get user ID
               var userId = dataUser.data[0].User_ID;
               console.log("user id: " + userId);
-              var userLastName = dataUser.data[0].User_LastName;
-              var userFirstName = dataUser.data[0].User_FirstName;
               // Store user ID in a cookie
               document.cookie = "userId=" + userId;
               console.log(document.cookie);
               // Store user ID in local storage
               window.localStorage.setItem('stress_analytics', userId);
               alert("You're logged in!"); 
-
-              // Get study ID
-              var studyId = dataStudy.data[0].Study_ID;
-              console.log("study id: " + studyId);
-              // Update Users spreadsheet with study ID if it's empty
-              if (dataUser.data[0].Study_ID != "") {
-                fetch(urlUsers, {
-                method: "POST",
-                body: JSON.stringify({
-                    "data": {"User_ID":userId,"User_PW":password,"Study_ID":studyID,"User_Type":"researcher","User_Email":email,"User_LastName":userLastName,"User_FirstName":userFirstName}, 
-                    "query": `select * from ${UsersAPIKey} where User_ID='${userId}'`}),
-                })
-                .then(res => {
-                    if (res.status === 201){
-                        window.location.href = "index.html"
-                    }
-                    else {
-                        alert("Invalid study ID");
-                    }
-                })
-              }
           }
         }
-        
       }
       getResponse();
   }
@@ -116,7 +85,6 @@
     <h1 class="heading">login</h1>
     <input id="se_researcher" type="email" placeholder="Email" autocomplete="off" class="email" required>
     <input id="sp_researcher" type="password" placeholder="Password" autocomplete="off" class="password" required>
-    <input id="si_researcher" type="text" placeholder="Study ID" autocomplete="off" class="studyID" required>
     <button type="submit" onclick="SubForm()" class="submit">Log In</button>
     <a href="register-researcher.html" class="link">Don't have an account? Create account</a>
 
