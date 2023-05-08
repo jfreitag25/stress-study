@@ -63,11 +63,34 @@
           }
         })
         }
-    document.getElementById("re").value ="";
-    document.getElementById("rp").value=""; 
-    document.getElementById("rfn").value=""; 
-    document.getElementById("rln").value=""; 
-      }
+
+        // Email Verification
+        function sendEmail() {
+            Email.send({
+              SecureToken : "8ac76abd-8d65-4197-bf2a-437dc3181a6d",
+              To : email,
+              From : "juliafreitag@college.harvard.edu",
+              Subject: "Email Confirmation for LIT Stress Study",
+              Body: `Hi, ${firstName}! You have successfully made an account for the LIT Study. Thank you for your participation! You may head back to the application now.`,
+              }).then(
+                message => {
+                  if (message == 'OK') {
+                    alert("Email verification sent.");
+                  }
+                  else {
+                    console.error (message);
+                    alert("Error");
+                  }
+                });
+          }
+          sendEmail();
+
+          // Reset Form Fields
+          document.getElementById("re").value ="";
+          document.getElementById("rp").value=""; 
+          document.getElementById("rfn").value=""; 
+          document.getElementById("rln").value=""; 
+  }
   </script>
 </head>
 <body>

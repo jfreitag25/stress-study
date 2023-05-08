@@ -11,8 +11,134 @@
 		integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
 		crossorigin="anonymous">
   </script>
+  <script src= "https://smtpjs.com/v3/smtp.js"></script>
+  
+  <!-- SMTP server to send email -->
+  <script src= "https://smtpjs.com/v3/smtp.js"></script>
+
+  <!--  Google Sheets API client library -->
+  <script src="https://apis.google.com/js/api.js"></script>
 	<script>
-	  function SubForm (){
+    // // Load the Google Sheets API
+    // gapi.load('client', initClient);
+
+    // function initClient() {
+    //   gapi.client.init({
+    //     apiKey: 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU',
+    //     clientId: '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com',
+    //     discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+    //     scope: 'https://www.googleapis.com/auth/spreadsheets',
+    //   }).then(function() {
+    //     console.log('Google Sheets API client loaded');
+    //   }, function(error) {
+    //     console.log('Error loading Google Sheets API client:', error);
+    //   });
+    // }
+
+    // Set to client ID and API key from the Developer Console
+  
+  //     const CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
+  //     const API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
+
+  //     // Discovery doc URL for APIs used by the quickstart
+  //     const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
+
+  //     // Authorization scopes required by the API; multiple scopes can be
+  //     // included, separated by spaces.
+  //     const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+
+  //     let tokenClient;
+  //     let gapiInited = false;
+  //     let gisInited = false;
+
+  //     document.getElementById('authorize_button').style.visibility = 'hidden';
+  //     document.getElementById('signout_button').style.visibility = 'hidden';
+
+  //     /**
+  //      * Callback after api.js is loaded.
+  //      */
+  //     function gapiLoaded() {
+  //       gapi.load('client', initializeGapiClient);
+  //     }
+
+  //     /**
+  //      * Callback after the API client is loaded. Loads the
+  //      * discovery doc to initialize the API.
+  //      */
+  //     async function initializeGapiClient() {
+  //       await gapi.client.init({
+  //         apiKey: API_KEY,
+  //         discoveryDocs: [DISCOVERY_DOC],
+  //       });
+  //       gapiInited = true;
+  //       maybeEnableButtons();
+  //     }
+
+  //     /**
+  //      * Callback after Google Identity Services are loaded.
+  //      */
+  //     function gisLoaded() {
+  //       tokenClient = google.accounts.oauth2.initTokenClient({
+  //         client_id: CLIENT_ID,
+  //         scope: SCOPES,
+  //         callback: '', // defined later
+  //       });
+  //       gisInited = true;
+  //       maybeEnableButtons();
+  //     }
+
+  //     /**
+  //      * Enables user interaction after all libraries are loaded.
+  //      */
+  //     function maybeEnableButtons() {
+  //       if (gapiInited && gisInited) {
+  //         document.getElementById('authorize_button').style.visibility = 'visible';
+  //       }
+  //     }
+
+  //     /**
+  //      *  Sign in the user upon button click.
+  //      */
+  //     function handleAuthClick() {
+  //       tokenClient.callback = async (resp) => {
+  //         if (resp.error !== undefined) {
+  //           throw (resp);
+  //         }
+  //         document.getElementById('signout_button').style.visibility = 'visible';
+  //         document.getElementById('authorize_button').innerText = 'Refresh';
+  //         await listMajors();
+  //       };
+
+  //       if (gapi.client.getToken() === null) {
+  //         // Prompt the user to select a Google Account and ask for consent to share their data
+  //         // when establishing a new session.
+  //         tokenClient.requestAccessToken({prompt: 'consent'});
+  //       } else {
+  //         // Skip display of account chooser and consent dialog for an existing session.
+  //         tokenClient.requestAccessToken({prompt: ''});
+  //       }
+  //     }
+
+  //   // function authorize() {
+  //   // return gapi.auth2.getAuthInstance()
+  //   //   .signIn({scope: "https://www.googleapis.com/auth/spreadsheets"})
+  //   //   .then(function() { console.log("Sign-in successful"); },
+  //   //         function(error) { console.error("Error signing in", error); });
+  //   // }
+
+  //   function createSpreadsheet(email, firstName, lastName) {
+  //   var spreadsheetTitle = "Researcher - " + firstName + " " + lastName;
+  //   gapi.client.sheets.spreadsheets.create({
+  //     properties: {
+  //       title: spreadsheetTitle,
+  //     },
+  //   }).then((response) => {
+  //     console.log('New spreadsheet created with ID: ' + response.result.spreadsheetId);
+  //     addResearcherToSpreadsheet(email, firstName, lastName, response.result.spreadsheetId);
+  //   });
+  // }
+
+  function SubForm (){
         // Hash function
         function hash(string) {
             var hash = 0;
@@ -24,6 +150,7 @@
             }
         return hash;
         }
+
         var email = document.getElementById("re_researcher").value;
         var password = hash(document.getElementById("rp_researcher").value);
         var firstName = document.getElementById("rfn_researcher").value;
@@ -39,11 +166,21 @@
                 return v.toString(16);
         });
         }
+
         // Add user data to spreadsheet
         if (email != "" && password != "" && firstName != "" && lastName != "") {
             fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
             method: "POST",
-            body: JSON.stringify({"data": {"User_ID":CreateUUID(),"User_Email":email,"User_FirstName":firstName,"User_LastName":lastName,"User_PW":password,"User_Type":"researcher"}}),
+            body: JSON.stringify({
+              "data": {
+                "User_ID":CreateUUID(),
+                "User_Email":email,
+                "User_FirstName":firstName,
+                "User_LastName":lastName,
+                "User_PW":password,
+                "User_Type":"researcher"
+                }
+              }),
             }).then(res =>{
             if (res.status === 201){
                 alert("Account successfully made!")
@@ -59,18 +196,45 @@
                 else alert("Error")
             }
             })
-            }
-        document.getElementById("re_researcher").value ="";
-        document.getElementById("rp_researcher").value=""; 
-        document.getElementById("rfn_researcher").value=""; 
-        document.getElementById("rln_researcher").value=""; 
+          }
 
-    }
+          // createSpreadsheet().then(() => {
+          //   alert("Account successfully made!");
+          //   window.location.href = "login-researcher.html";
+          // });
+
+          // Email Verification
+          function sendEmail() {
+            Email.send({
+              SecureToken : "8ac76abd-8d65-4197-bf2a-437dc3181a6d",
+              To : email,
+              From : "juliafreitag@college.harvard.edu",
+              Subject: "Email Confirmation for LIT Stress Study",
+              Body: `Hi, ${firstName}! You have successfully made an account for the LIT Study. Thank you for your participation! You may head back to the application now.`,
+              }).then(
+                message => {
+                  if (message == 'OK') {
+                    alert("Email verification sent.");
+                  }
+                  else {
+                    console.error (message);
+                    alert("Error");
+                  }
+                });
+          }
+          sendEmail();
+
+          // Reset form fields
+
+          document.getElementById("re_researcher").value ="";
+          document.getElementById("rp_researcher").value=""; 
+          document.getElementById("rfn_researcher").value=""; 
+          document.getElementById("rln_researcher").value=""; 
+      }
 
   </script>
 </head>
 <body>
-  <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">LIT Study</a>
@@ -95,4 +259,7 @@
         <button id="submit" value="Submit" class="submit" type="submit" onclick='SubForm()'>Create Account</button>
       <a href="login-researcher.html" class="link">Already have an account? Log In</a>
     </div>
+
+    <!-- JAVASCRIPT GOOGLE CLIENT  -->
+    <script async defer src="https://apis.google.com/js/api.js"></script>
   </body>
