@@ -19,124 +19,43 @@
   <!--  Google Sheets API client library -->
   <script src="https://apis.google.com/js/api.js"></script>
 	<script>
-    // // Load the Google Sheets API
-    // gapi.load('client', initClient);
 
-    // function initClient() {
-    //   gapi.client.init({
-    //     apiKey: 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU',
-    //     clientId: '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com',
-    //     discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-    //     scope: 'https://www.googleapis.com/auth/spreadsheets',
-    //   }).then(function() {
-    //     console.log('Google Sheets API client loaded');
-    //   }, function(error) {
-    //     console.log('Error loading Google Sheets API client:', error);
-    //   });
-    // }
+    const CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
+    const API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
+    const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
+    const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 
-    // Set to client ID and API key from the Developer Console
-  
-  //     const CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
-  //     const API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
+   
+      let tokenClient;
+      let gapiInited = false;
+      let gisInited = false;
 
-  //     // Discovery doc URL for APIs used by the quickstart
-  //     const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
+      // Callback after api.js is loaded.
+      function gapiLoaded() {
+        gapi.load('client', initializeGapiClient);
+      }
 
-  //     // Authorization scopes required by the API; multiple scopes can be
-  //     // included, separated by spaces.
-  //     const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+      // Callback after the API client is loaded. Loads the discovery doc to initialize the API.
+      async function initializeGapiClient() {
+        await gapi.client.init({
+          apiKey: API_KEY,
+          discoveryDocs: [DISCOVERY_DOC],
+        });
+        gapiInited = true;
+        maybeEnableButtons();
+      }
 
-  //     let tokenClient;
-  //     let gapiInited = false;
-  //     let gisInited = false;
-
-  //     document.getElementById('authorize_button').style.visibility = 'hidden';
-  //     document.getElementById('signout_button').style.visibility = 'hidden';
-
-  //     /**
-  //      * Callback after api.js is loaded.
-  //      */
-  //     function gapiLoaded() {
-  //       gapi.load('client', initializeGapiClient);
-  //     }
-
-  //     /**
-  //      * Callback after the API client is loaded. Loads the
-  //      * discovery doc to initialize the API.
-  //      */
-  //     async function initializeGapiClient() {
-  //       await gapi.client.init({
-  //         apiKey: API_KEY,
-  //         discoveryDocs: [DISCOVERY_DOC],
-  //       });
-  //       gapiInited = true;
-  //       maybeEnableButtons();
-  //     }
-
-  //     /**
-  //      * Callback after Google Identity Services are loaded.
-  //      */
-  //     function gisLoaded() {
-  //       tokenClient = google.accounts.oauth2.initTokenClient({
-  //         client_id: CLIENT_ID,
-  //         scope: SCOPES,
-  //         callback: '', // defined later
-  //       });
-  //       gisInited = true;
-  //       maybeEnableButtons();
-  //     }
-
-  //     /**
-  //      * Enables user interaction after all libraries are loaded.
-  //      */
-  //     function maybeEnableButtons() {
-  //       if (gapiInited && gisInited) {
-  //         document.getElementById('authorize_button').style.visibility = 'visible';
-  //       }
-  //     }
-
-  //     /**
-  //      *  Sign in the user upon button click.
-  //      */
-  //     function handleAuthClick() {
-  //       tokenClient.callback = async (resp) => {
-  //         if (resp.error !== undefined) {
-  //           throw (resp);
-  //         }
-  //         document.getElementById('signout_button').style.visibility = 'visible';
-  //         document.getElementById('authorize_button').innerText = 'Refresh';
-  //         await listMajors();
-  //       };
-
-  //       if (gapi.client.getToken() === null) {
-  //         // Prompt the user to select a Google Account and ask for consent to share their data
-  //         // when establishing a new session.
-  //         tokenClient.requestAccessToken({prompt: 'consent'});
-  //       } else {
-  //         // Skip display of account chooser and consent dialog for an existing session.
-  //         tokenClient.requestAccessToken({prompt: ''});
-  //       }
-  //     }
-
-  //   // function authorize() {
-  //   // return gapi.auth2.getAuthInstance()
-  //   //   .signIn({scope: "https://www.googleapis.com/auth/spreadsheets"})
-  //   //   .then(function() { console.log("Sign-in successful"); },
-  //   //         function(error) { console.error("Error signing in", error); });
-  //   // }
-
-  //   function createSpreadsheet(email, firstName, lastName) {
-  //   var spreadsheetTitle = "Researcher - " + firstName + " " + lastName;
-  //   gapi.client.sheets.spreadsheets.create({
-  //     properties: {
-  //       title: spreadsheetTitle,
-  //     },
-  //   }).then((response) => {
-  //     console.log('New spreadsheet created with ID: ' + response.result.spreadsheetId);
-  //     addResearcherToSpreadsheet(email, firstName, lastName, response.result.spreadsheetId);
-  //   });
-  // }
+     // Callback after Google Identity Services are loaded.
+      function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          callback: handleTokenResponse,
+        });
+        gisInited = true;
+        maybeEnableButtons();
+        createSpreadsheet();
+      }
 
   function SubForm (){
         // Hash function
@@ -167,65 +86,106 @@
         });
         }
 
+        function handleAuthClick() {
+        tokenClient.callback = async (resp) => {
+          if (resp.error !== undefined) {
+            throw (resp);
+          }
+          document.getElementById('submit').innerText = 'Refresh';
+          await listMajors();
+        };
+
+        if (gapi.client.getToken() === null) {
+          // Prompt the user to select a Google Account and ask for consent to share their data
+          // when establishing a new session.
+          tokenClient.requestAccessToken({prompt: 'consent'});
+        } else {
+          // Skip display of account chooser and consent dialog for an existing session.
+          tokenClient.requestAccessToken({prompt: ''});
+        }
+        } 
+
+        function createSpreadsheet(title, callback) {
+        var spreadsheetTitle = "Researcher - " + firstName + " " + lastName;
+          try {
+            gapi.client.sheets.spreadsheets.create({
+              properties: {
+                title: spreadsheetTitle,
+              },
+            }).then((response) => {
+              if (callback) callback(response);
+              console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
+            });
+          } catch (err) {
+            console.log("Error");
+            console.log(err.message);
+            return;
+          }
+        }
+
         // Add user data to spreadsheet
         if (email != "" && password != "" && firstName != "" && lastName != "") {
-            fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
-            method: "POST",
-            body: JSON.stringify({
-              "data": {
-                "User_ID":CreateUUID(),
-                "User_Email":email,
-                "User_FirstName":firstName,
-                "User_LastName":lastName,
-                "User_PW":password,
-                "User_Type":"researcher"
-                }
-              }),
-            }).then(res =>{
-            if (res.status === 201){
-                alert("Account successfully made!")
-                window.location.href = "login-researcher.html"
-            }
-            else{
-                if (email == "") {
-                    alert("Please enter your email")
-                }
-                else if (password == "") {
-                    alert("Please enter your password")
-                }
-                else alert("Error")
-            }
-            })
-          }
+            // Email Verification
+            function sendEmail() {
+              Email.send({
+                SecureToken : "8ac76abd-8d65-4197-bf2a-437dc3181a6d",
+                To : email,
+                From : "juliafreitag@college.harvard.edu",
+                Subject: "Email Confirmation for LIT Stress Study",
+                Body: `Hi, ${firstName}! You have successfully made an account for the LIT Study. Thank you for your participation! You may head back to the application now.`,
+                }).then(
+                  message => {
+                    if (message == 'OK') {
+                      // Send email
+                      alert("Please check your email to verify your account");
 
-          // createSpreadsheet().then(() => {
-          //   alert("Account successfully made!");
-          //   window.location.href = "login-researcher.html";
-          // });
+                      // Populate spreadsheet with user data
+                      fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
+                      method: "POST",
+                      body: JSON.stringify({
+                        "data": {
+                          "User_ID": CreateUUID(),
+                          "User_Email": email,
+                          "User_FirstName": firstName,
+                          "User_LastName": lastName,
+                          "User_PW": password,
+                          "User_Type": "researcher"
+                          }
+                        }),
+                      }).then(res =>{
+                      if (res.status === 201){
+                          console.log("Account made!");
+                          window.location.href = "login-researcher.html";
+                          handleAuthClick();
+                          createSpreadsheet();
+                      }
+                      else{
+                          if (email == "") {
+                              alert("Please enter your email")
+                          }
+                          else if (password == "") {
+                              alert("Please enter your password")
+                          }
+                          else alert("Error")
+                      }
+                      })
+                    }
+                    else {
+                      console.error (message);
+                      alert("Unable to verify email. Please try again.");
+                    }
+                  });
+            }
 
-          // Email Verification
-          function sendEmail() {
-            Email.send({
-              SecureToken : "8ac76abd-8d65-4197-bf2a-437dc3181a6d",
-              To : email,
-              From : "juliafreitag@college.harvard.edu",
-              Subject: "Email Confirmation for LIT Stress Study",
-              Body: `Hi, ${firstName}! You have successfully made an account for the LIT Study. Thank you for your participation! You may head back to the application now.`,
-              }).then(
-                message => {
-                  if (message == 'OK') {
-                    alert("Email verification sent.");
-                  }
-                  else {
-                    console.error (message);
-                    alert("Error");
-                  }
-                });
-          }
-          sendEmail();
+            // call createSpreadsheet() function here
+            createSpreadsheet("Researcher - " + firstName + " " + lastName, function(response) {
+              console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
+            });
+            sendEmail();
+        }
+        
 
           // Reset form fields
-
           document.getElementById("re_researcher").value ="";
           document.getElementById("rp_researcher").value=""; 
           document.getElementById("rfn_researcher").value=""; 
