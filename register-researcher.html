@@ -25,7 +25,6 @@
     const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
     const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
 
-   
       let tokenClient;
       let gapiInited = false;
       let gisInited = false;
@@ -43,26 +42,7 @@
         });
         gapiInited = true;
         maybeEnableButtons();
-      }
-
-      function handleAuthClick() {
-        tokenClient.callback = async (resp) => {
-          if (resp.error !== undefined) {
-            throw (resp);
-          }
-          document.getElementById('submit').innerText = 'Refresh';
-          await listMajors();
-        };
-
-        if (gapi.client.getToken() === null) {
-          // Prompt the user to select a Google Account and ask for consent to share their data
-          // when establishing a new session.
-          tokenClient.requestAccessToken({prompt: 'consent'});
-        } else {
-          // Skip display of account chooser and consent dialog for an existing session.
-          tokenClient.requestAccessToken({prompt: ''});
-        }
-        } 
+      } 
 
         // Callback after Google Identity Services are loaded.
         function gisLoaded() {
@@ -74,6 +54,26 @@
           gisInited = true;
           maybeEnableButtons();
           createSpreadsheet();
+        }
+
+        function handleAuthClick() {
+          gisLoaded();
+          tokenClient.callback = async (resp) => {
+            if (resp.error !== undefined) {
+              throw (resp);
+            }
+            document.getElementById('submit').innerText = 'Refresh';
+            await listMajors();
+          };
+
+          if (gapi.client.getToken() === null) {
+            // Prompt the user to select a Google Account and ask for consent to share their data
+            // when establishing a new session.
+            tokenClient.requestAccessToken({prompt: 'consent'});
+          } else {
+            // Skip display of account chooser and consent dialog for an existing session.
+            tokenClient.requestAccessToken({prompt: ''});
+          }
         }
 
   function SubForm (){
@@ -176,7 +176,6 @@
                     }
                   });
             }
-
             // call createSpreadsheet() function here
             createSpreadsheet("Researcher - " + firstName + " " + lastName, function(response) {
               console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
