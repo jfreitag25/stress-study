@@ -13,210 +13,85 @@
   </script>
 
   <!--  Google Sheets API client library -->
-  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://apis.google.com/js/api.js" async defer></script>
 
-  <script src= "https://smtpjs.com/v3/smtp.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   
   <!-- SMTP server to send email -->
   <script src= "https://smtpjs.com/v3/smtp.js"></script>
 
 	<script>
 
-    const CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
-    const API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
-    const DISCOVERY_DOC = 'https://sheets.googleapis.com/$discovery/rest?version=v4';
-    const SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+function handleCredentialResponse(response) {
+  console.log("Credential response", response);
+  // Handle the credential response here.
+}
 
-      let tokenClient;
-      let gapiInited = false;
-      let gisInited = false;
+function initializeGoogleSignIn() {
+  google.accounts.id.initialize({
+      client_id: "308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com",
+      apiKey: "AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU",
+      callback: handleCredentialResponse
+    });
+  }
 
-      document.getElementById('authorize_button').style.visibility = 'hidden';
-      document.getElementById('signout_button').style.visibility = 'hidden';
+function execute() {
+  // Obtain an access token
+  google.accounts.id.prompt({
+     client_id: "308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com",
+     scope: "https://www.googleapis.com/auth/spreadsheets",
+     response_type: "token id_token"
+  });
 
-      // Callback after api.js is loaded.
-      function gapiLoaded() {
-        gapi.load('client', initializeGapiClient);
-      }
-
-      // Callback after the API client is loaded. Loads the discovery doc to initialize the API.
-      async function initializeGapiClient() {
-        await gapi.client.init({
-          apiKey: API_KEY,
-          discoveryDocs: [DISCOVERY_DOC],
+  gapi.load('client', function() {
+      gapi.client.init({
+        apiKey: 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU',
+        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4']
+      }).then(function() {
+        gapi.client.sheets.spreadsheets.create({
+          "resource": {}
+        }).then(function(response) {
+          // Handle the results here (response.result has the parsed body).
+          console.log("Response", response);
+        }, function(err) {
+          console.error("Execute error", err);
         });
-        gapiInited = true;
-        maybeEnableButtons();
+      }, function(err) {
+        console.error("Client initialization error", err);
+      });
+    });
+  }
+
+function loadClient() {
+  // Load the necessary client libraries here.
+  console.log("Client loaded");
+}
+
+// Load the Google Identity Services library.
+(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "https://accounts.google.com/gsi/client";
+      js.onload = initializeGoogleSignIn; 
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, "script", "google-identity-services"));
+
+  // Load the Google API client library.
+  function handleClientLoad() {
+      gapi.load('client', {
+      callback: loadClient,
+      onerror: function() {
+        console.error("Failed to load Google API client.");
+      },
+      timeout: 5000, // Set a timeout (in milliseconds) for the library to load
+      ontimeout: function() {
+        console.error("Google API client took too long to load.");
       }
-      
-      // Callback after Google Identity Services are loaded.
-      function gisLoaded() {
-        tokenClient = google.accounts.oauth2.initTokenClient({
-          client_id: CLIENT_ID,
-          scope: SCOPES,
-          callback: '', // defined later
-        });
-        gisInited = true;
-        maybeEnableButtons();
-      }
+    });
+  }
 
-      // Enables user interaction after all libraries are loaded.
-      function maybeEnableButtons() {
-        if (gapiInited && gisInited) {
-          document.getElementById('authorize_button').style.visibility = 'visible';
-        }
-      }
-
-      // Sign in the user upon button click.
-      function handleAuthClick() {
-        tokenClient.callback = async (resp) => {
-          if (resp.error !== undefined) {
-            throw (resp);
-          }
-          document.getElementById('signout_button').style.visibility = 'visible';
-          document.getElementById('authorize_button').innerText = 'Refresh';
-          await listMajors();
-        };
-
-        if (gapi.client.getToken() === null) {
-          // Prompt the user to select a Google Account and ask for consent to share their data
-          // when establishing a new session.
-          tokenClient.requestAccessToken({prompt: 'consent'});
-        } else {
-          // Skip display of account chooser and consent dialog for an existing session.
-          tokenClient.requestAccessToken({prompt: ''});
-        }
-      }
-
-      // Sign out the user upon button click.
-      function handleSignoutClick() {
-        const token = gapi.client.getToken();
-        if (token !== null) {
-          google.accounts.oauth2.revoke(token.access_token);
-          gapi.client.setToken('');
-          document.getElementById('content').innerText = '';
-          document.getElementById('authorize_button').innerText = 'Authorize';
-          document.getElementById('signout_button').style.visibility = 'hidden';
-        }
-      }
-
-    
-
-  function SubForm (){
-        // Hash function
-        function hash(string) {
-            var hash = 0;
-            if (string.length == 0) return hash;
-            for (x = 0; x <string.length; x++) {
-            ch = string.charCodeAt(x);
-            hash = ((hash <<5) - hash) + ch;
-            hash = hash & hash;
-            }
-        return hash;
-        }
-
-        var email = document.getElementById("re_researcher").value;
-        var password = hash(document.getElementById("rp_researcher").value);
-        var firstName = document.getElementById("rfn_researcher").value;
-        var lastName = document.getElementById("rln_researcher").value;
-
-        console.log(email);
-        console.log(password);
-
-        // Generate UUID
-        function CreateUUID() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-        });
-        }
-
-        function createSpreadsheet(title, callback) {
-        var spreadsheetTitle = "Researcher - " + firstName + " " + lastName;
-          try {
-            gapi.client.sheets.spreadsheets.create({
-              properties: {
-                title: spreadsheetTitle,
-              },
-            }).then((response) => {
-              if (callback) callback(response);
-              console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
-            }); 
-          } catch (err) {
-            document.getElementById('content').innerText = err.message;
-            return;
-          }
-        }
-
-        // Add user data to spreadsheet
-        if (email != "" && password != "" && firstName != "" && lastName != "") {
-            // Email Verification
-            function sendEmail() {
-              Email.send({
-                SecureToken : "8ac76abd-8d65-4197-bf2a-437dc3181a6d",
-                To : email,
-                From : "juliafreitag@college.harvard.edu",
-                Subject: "Email Confirmation for LIT Stress Study",
-                Body: `Hi, ${firstName}! You have successfully made an account for the LIT Study. Thank you for your participation! You may head back to the application now.`,
-                }).then(
-                  message => {
-                    if (message == 'OK') {
-                      // Send email
-                      alert("Please check your email to verify your account");
-
-                      // Populate spreadsheet with user data
-                      fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
-                      method: "POST",
-                      body: JSON.stringify({
-                        "data": {
-                          "User_ID": CreateUUID(),
-                          "User_Email": email,
-                          "User_FirstName": firstName,
-                          "User_LastName": lastName,
-                          "User_PW": password,
-                          "User_Type": "researcher"
-                          }
-                        }),
-                      }).then(res =>{
-                      if (res.status === 201){
-                          console.log("Account made!");
-                          window.location.href = "login-researcher.html";
-                          handleAuthClick();
-                          createSpreadsheet();
-                      }
-                      else{
-                          if (email == "") {
-                              alert("Please enter your email")
-                          }
-                          else if (password == "") {
-                              alert("Please enter your password")
-                          }
-                          else alert("Error")
-                      }
-                      })
-                    }
-                    else {
-                      console.error (message);
-                      alert("Unable to verify email. Please try again.");
-                    }
-                  });
-            }
-            // call createSpreadsheet() function here
-            createSpreadsheet("Researcher - " + firstName + " " + lastName, function(response) {
-              console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
-            });
-            sendEmail();
-        }
-        
-
-          // Reset form fields
-          document.getElementById("re_researcher").value ="";
-          document.getElementById("rp_researcher").value=""; 
-          document.getElementById("rfn_researcher").value=""; 
-          document.getElementById("rln_researcher").value=""; 
-      }
-
-  </script>
+</script>
 </head>
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
@@ -237,8 +112,6 @@
     <div id="registerForm">
       <h1 class="heading">Create Researcher Account</h1>
       <!--Add buttons to initiate auth sequence and sign out-->
-      <button id="authorize_button" onclick="handleAuthClick()">Authorize</button>
-      <button id="signout_button" onclick="handleSignoutClick()">Sign Out</button>
 
         <input id="re_researcher" name="User_Email" type="email" placeholder="Enter Email" class="email" required>
         <input id="rfn_researcher" name="User_FirstName" type="text" placeholder="First Name" class="firstName" required>
@@ -246,6 +119,9 @@
         <input id="rp_researcher" name="User_PW" type="password" placeholder="Enter Password" class="password" required>
         <button id="submit" value="Submit" class="submit" type="submit" onclick='SubForm()'>Create Account</button>
       <a href="login-researcher.html" class="link">Already have an account? Log In</a>
+
+      <button onclick="google.accounts.id.prompt()">authorize and load</button>
+      <button onclick="execute()">execute</button>
     </div>
 
     <!-- JAVASCRIPT GOOGLE CLIENT  -->

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Extension page</title>
+  <script src="gen_extension/base_js/jszip.min.js"></script>
+  <script src="zipper.js"></script>
+<style>
+* {
+  box-sizing: border-box;
+  font-family: "Times New Roman"
+}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+label.formlabel {
+  padding: 12px 12px 12px 0;
+  display: inline-block;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  float: right;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.col-25 {
+  float: left;
+  width: 25%;
+  margin-top: 6px;
+}
+
+.col-75 {
+  float: left;
+  width: 75%;
+  margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .col-25, .col-75, input[type=submit] {
+    width: 100%;
+    margin-top: 0;
+  }
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  resize: none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+	<h3>Manifest Generation</h3>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="title">Extension Title</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="title" name="title" placeholder="Extension title..." value="Generated Extension">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="vnum">Version Number</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="vnum" name="vnum" placeholder="Version number..." value="2.0">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label for="descript">Description</label>
+    </div>
+    <div class="col-75">
+      <textarea id="descript" name="descript" placeholder="Extension description...">This is the generated extension</textarea>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="extRegex">Extension Regex</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="extRegex" name="extRegex" placeholder='Extension regex in double quotes and comma-separated (e.g. "https://*/*", "http://*/*")' value='"https://*/*", "http://*/*"'>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="idRegex">ID Regex</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="idRegex" name="idRegex" placeholder='ID regex in double quotes and comma-separated (e.g. "https://*/*", "http://*/*")' value='"https://jfreitag25.github.io/stress-study/*", "https://jfreitag25.github.io/*"'>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="timerRegex">Timer Regex</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="timerRegex" name="timerRegex" placeholder='ID regex in double quotes and comma-separated (e.g. "https://*/*", "http://*/*")' value='"https://canvas.instructure.com/*", "https://canvas.instructure.com/", "https://jupyterhub.uclatall.com/*", "https://jupyterhub.uclatall.com/"'>
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container">
+<h3>Driver Code Generation</h3>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="macro">Script Macro URL</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="macro" name="macro" placeholder="Google Sheets Macro URL" value='https://script.google.com/macros/s/AKfycbxqfX-aFHBWO7N2EIMhwKbtWeezvxwblDk5ltHRFWiREQR3mMncFDGXz57bcHe-t1I/exec'>
+    </div>
+  </div>
+    
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="ftitle">Form Title</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="ftitle" name="ftitle" placeholder="Form title..." value="Here's our extension!">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="icon">Icon Link URL</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="icon" name="icon" placeholder="Icon link url..." value="https://i.postimg.cc/qv7dKJdY/image-6.png">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q1">Question 1</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q1" name="Q1" placeholder="Question 1..." value="How serious is it?">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q2">Question 2</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q2" name="Q2" placeholder="Question 2..." value="How sure do you feel you can work it out?">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q1L0">Question 1 Label 0</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q1L0" name="Q1L0" placeholder="Question 1 label 0..." value="Very slight">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q1L5">Question 1 Label 5</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q1L5" name="Q1L5" placeholder="Question 1 label 5..." value="Very severe">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q2L0">Question 2 Label 0</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q2L0" name="Q2L0" placeholder="Question 2 label 0..." value="I'm sure I can figure this out">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="Q2L5">Question 2 Label 5</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="Q2L5" name="Q2L5" placeholder="Question 2 label 5..." value="I'm close to Giving Up">
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="idlink">User Login URL</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="idlink" name="idlink" placeholder="User login URL..." value="https://jfreitag25.github.io/stress-study/login-student.html">
+    </div>
+  </div>
+</div>
+
+<br>
+
+<div class="container">
+	<h3>Timer Generation</h3>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="start">Start Time</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="start" name="start" placeholder="Local start time, comma separated (e.g. 4:30:00pm = 16,30,00)" value="16,30,0">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="end">End Time</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="end" name="end" placeholder="Local start time, comma separated (e.g. 4:30:00pm = 16,30,00)" value="19,30,0">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-25">
+      <label class="formlabel" for="freq">Ping Times</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="freq" name="freq" placeholder='Ping times, comma separated, surrounded by [] (e.g. ["12:40", "16:20", "8:05"])' value='["12:40", "16:20", "8:05"]'>
+    </div>
+  </div>
+</div>
+
+<div id="errTxt" hidden>
+  <br>
+  <i>Please fill in all entries.</i>
+</div>
+
+<br>
+  <div class="row">
+    <input type="submit" id='subbtn' value="Submit">
+  </div>
+
+</body>
+</html>
+
+
