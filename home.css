@@ -52,8 +52,12 @@ h1{
 h3{
     font-size: 30px;
     color: #36454F;
-    font-weight: 600;
+    font-weight: 300;
     text-transform: capitalize;
+}
+
+p{
+    color: #36454F;
 }
 
 .nav {
