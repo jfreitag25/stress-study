@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="form.css">
     <link rel="stylesheet" href="home.css">
     <script src="check_login.js"></script>
+    <script>
+      var storedSpreadsheetId = getSpreadsheetId();
+      var downloadLink = `https://docs.google.com/spreadsheets/d/${storedSpreadsheetId}/export?format=xlsx`
+    </script>
 </head>
 <body>
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
@@ -36,7 +40,7 @@
         </iframe>
       </div>
         <!-- Download button -->
-        <a id="btn" href="https://docs.google.com/spreadsheets/d/1OK_iDIMp0npjjwcfRXdFX6IkRgwSR2sL2p5AzoStOIM/export?format=xlsx" class="btn btn-primary position-absolute bottom">Download</a>
+        <a id="btn" href= downloadLink class="btn btn-primary position-absolute bottom">Download</a>
     </main>
 </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
