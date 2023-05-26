@@ -9,8 +9,14 @@
     <link rel="stylesheet" href="home.css">
     <script src="check_login.js"></script>
     <script>
-      var storedSpreadsheetId = getSpreadsheetId();
-      var downloadLink = `https://docs.google.com/spreadsheets/d/${storedSpreadsheetId}/export?format=xlsx`
+      var SPREADSHEET_ID = getSpreadsheetId();
+      if (SPREADSHEET_ID) {
+        console.log('Stored Spreadsheet ID:', SPREADSHEET_ID);
+      } else {
+        console.log("Error retrieving spreadsheet ID")
+      }
+      var downloadLink = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=xlsx`
+      var embedLink = `https://docs.google.com/spreadsheets/d/${SPREADSHEET-ID}/edit?usp=sharing?widget=true&amp;headers=false`
     </script>
 </head>
 <body>
@@ -35,8 +41,9 @@
       <div>
         <h1>Your Study Data</h1>
         <!-- Embedded spreadsheet -->
-        <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQfNJhN4efuGMatgavrgp0JH_yr5hUGQEDlzbvX-TC_dZwrxT2yLmiLXt5lWRPxYc9K6KvZrJ8LXRei/pubhtml?widget=true&amp;headers=false"
-          width="90%" height="400" style="border:none;">
+        <iframe src= embedLink height="400" width="90%"></iframe>
+        <!-- <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQfNJhN4efuGMatgavrgp0JH_yr5hUGQEDlzbvX-TC_dZwrxT2yLmiLXt5lWRPxYc9K6KvZrJ8LXRei/pubhtml?widget=true&amp;headers=false"
+          width="90%" height="400" style="border:none;"> -->
         </iframe>
       </div>
         <!-- Download button -->
