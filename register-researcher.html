@@ -21,7 +21,124 @@
   <script src= "https://smtpjs.com/v3/smtp.js"></script>
 
   <script>
-    function SubForm (){
+    var CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
+    var API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
+    var SCOPE = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
+    
+    var tokenClient;
+    var access_token;
+
+    function gapiStart() {
+      gapi.client.init({}).then(function() {
+        gapi.client.load('sheets', 'v4').then(function() {
+          console.log('Sheets API client loaded');
+          execute();
+        }, function(reason) {
+          console.log('Error loading Sheets API client: ' + reason.result.error.message);
+        });
+      }).then(function(response) {
+        console.log('Discovery document loaded');
+      }, function(reason) {
+        console.log('Error: ' + reason.result.error.message);
+      });
+    }
+
+    function gapiLoad() {
+      gapi.load('client', gapiStart);
+    }
+
+    function gisInit() {
+      tokenClient = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: SCOPE,
+        callback: (tokenResponse) => {
+          access_token = tokenResponse.access_token;
+        },
+      });
+    }
+
+    function getToken() {
+      tokenClient.requestAccessToken();
+    }
+
+    function execute() {
+      // Get token
+      getToken();
+
+      // Create new spreadsheet
+      gapi.client.sheets.spreadsheets.create({
+        "resource": {
+            "properties": {
+              "title": "Researcher"
+            },
+            "sheets": [
+              {
+                "properties": {
+                  "title": "Sheet1"
+                },
+                "data": [
+                  {
+                    "rowData": [
+                      {
+                        "values": [
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_ID"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_Email"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_FirstName"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_LastName"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_PW"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "User_Type"
+                            }
+                          },
+                          {
+                            "userEnteredValue": {
+                              "stringValue": "Study_ID"
+                            }
+                          }]
+                      }]
+                  }]
+              }]
+        }
+      }).then(function(response) {
+        // Handle the results here (response.result has the parsed body).
+        console.log("Response", response);
+        // Store the spreadsheet ID in local storage
+        var spreadsheetId = response.result.spreadsheetId;
+        window.localStorage.setItem('spreadsheetId', spreadsheetId);
+        console.log("Spreadsheet ID: " + spreadsheetId);
+        console.log(window.localStorage.getItem('spreadsheetId'));
+        }, function(err) {
+          console.error("Execute error", err);
+        });
+      }
+      // Function to retrieve the spreadsheet ID from local storage
+      function getSpreadsheetId() {
+        var spreadsheetId = window.localStorage.getItem('spreadsheetId');
+        return spreadsheetId;
+      }
+
+      function SubForm (){
         // Hash function
         function hash(string) {
             var hash = 0;
@@ -47,7 +164,7 @@
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
-        });
+            });
         }
         // Add user data to spreadsheet
         if (email != "" && password != "" && firstName != "" && lastName != "") {
@@ -64,7 +181,6 @@
                     if (message == 'OK') {
                       // Send email
                       alert("Please check your email to verify your account");
-
                       // Populate spreadsheet with user data
                       fetch("https://api.apispreadsheets.com/data/h3BUx4gyjgxHR0H4/", {
                       method: "POST",
@@ -83,157 +199,32 @@
                           console.log("Account made!");
                           window.location.href = "login-researcher.html";
                       }
-                      else{
-                          if (email == "") {
-                              alert("Please enter your email")
-                          }
-                          else if (password == "") {
-                              alert("Please enter your password")
-                          }
-                          else alert("Error")
+                      else {
+                        "Error. Please try again."
                       }
+      
                       })
                     }
                     else {
                       console.error (message);
                       alert("Unable to verify email. Please try again.");
                     }
-                  });
+                });
             }
-            // call execute() function here
-
+            // Create new spreadsheet by calling execute() function
+            execute();
+            // Send verification email
             sendEmail();
         }
-          // Reset form fields
-          document.getElementById("re_researcher").value ="";
-          document.getElementById("rp_researcher").value=""; 
-          document.getElementById("rfn_researcher").value=""; 
-          document.getElementById("rln_researcher").value=""; 
+        else {
+          alert("Please complete all fields.");
+        }
+        // Reset form fields
+        document.getElementById("re_researcher").value ="";
+        document.getElementById("rp_researcher").value=""; 
+        document.getElementById("rfn_researcher").value=""; 
+        document.getElementById("rln_researcher").value=""; 
     }
-
-    // Client ID obtained from Google Cloud Console
-    var CLIENT_ID = '308242147743-68t6drbih09q77fhgroivjqntuhftvbm.apps.googleusercontent.com';
-    var API_KEY = 'AIzaSyBX2Qv95y7ICtMv1nIJJdgbxct70VRvLNU';
-    var SCOPE = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
-
-    var tokenClient;
-    var access_token;
-
-    function gapiStart() {
-    gapi.client.init({}).then(function() {
-      gapi.client.load('sheets', 'v4').then(function() {
-        console.log('Sheets API client loaded');
-        execute();
-      }, function(reason) {
-        console.log('Error loading Sheets API client: ' + reason.result.error.message);
-      });
-    }).then(function(response) {
-      console.log('Discovery document loaded');
-    }, function(reason) {
-      console.log('Error: ' + reason.result.error.message);
-    });
-  }
-
-  function gapiLoad() {
-    gapi.load('client', gapiStart);
-  }
-
-  function gisInit() {
-    tokenClient = google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPE,
-      callback: (tokenResponse) => {
-        access_token = tokenResponse.access_token;
-      },
-    });
-  }
-
-  function getToken() {
-    tokenClient.requestAccessToken();
-  }
-
-  function execute() {
-    // Get token
-    getToken();
-
-    // Create new spreadsheet
-    gapi.client.sheets.spreadsheets.create({
-      "resource": {
-          "properties": {
-            "title": "Researcher"
-          },
-          "sheets": [
-            {
-              "properties": {
-                "title": "Sheet1"
-              },
-              "data": [
-                {
-                  "rowData": [
-                    {
-                      "values": [
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_ID"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_Email"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_FirstName"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_LastName"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_PW"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "User_Type"
-                          }
-                        },
-                        {
-                          "userEnteredValue": {
-                            "stringValue": "Study_ID"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-      }
-    }).then(function(response) {
-      // Handle the results here (response.result has the parsed body).
-      console.log("Response", response);
-      // Store the spreadsheet ID in local storage
-      var spreadsheetId = response.result.spreadsheetId;
-      window.localStorage.setItem('spreadsheetId', spreadsheetId);
-      console.log("Spreadsheet ID: " + spreadsheetId);
-      console.log(window.localStorage.getItem('spreadsheetId'));
-      }, function(err) {
-        console.error("Execute error", err);
-      });
-    } 
-
-    // Function to retrieve the spreadsheet ID from local storage
-    function getSpreadsheetId() {
-      var spreadsheetId = window.localStorage.getItem('spreadsheetId');
-      return spreadsheetId;
-    }
-
 </script>  
 
 </head>
@@ -262,8 +253,5 @@
         <button id="submit" value="Submit" class="submit" type="submit" onclick='SubForm()'>Create Account</button>
       <a href="login-researcher.html" class="link">Already have an account? Log In</a>
 
-      <button onclick="execute()">Create Spreadsheet</button>
-
-      
-  <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+  <!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
   </body>
