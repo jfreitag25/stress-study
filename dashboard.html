@@ -4,19 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="form.css">
     <link rel="stylesheet" href="home.css">
     <script src="check_login.js"></script>
     <script>
-      var SPREADSHEET_ID = getSpreadsheetId();
-      if (SPREADSHEET_ID) {
-        console.log('Stored Spreadsheet ID:', SPREADSHEET_ID);
-      } else {
-        console.log("Error retrieving spreadsheet ID")
+      function getSpreadsheetId() {
+        var spreadsheetId = window.localStorage.getItem('spreadsheetId');
+        return spreadsheetId;
+        }
+        var SPREADSHEET_ID = getSpreadsheetId();
+        if (SPREADSHEET_ID) {
+          console.log('Stored Spreadsheet ID:', SPREADSHEET_ID);
+        } else {
+          console.log("Error retrieving spreadsheet ID")
       }
       var downloadLink = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/export?format=xlsx`
-      var embedLink = `https://docs.google.com/spreadsheets/d/${SPREADSHEET-ID}/edit?usp=sharing?widget=true&amp;headers=false`
     </script>
 </head>
 <body>
@@ -41,16 +44,22 @@
       <div>
         <h1>Your Study Data</h1>
         <!-- Embedded spreadsheet -->
-        <iframe src= embedLink height="400" width="90%"></iframe>
-        <!-- <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQfNJhN4efuGMatgavrgp0JH_yr5hUGQEDlzbvX-TC_dZwrxT2yLmiLXt5lWRPxYc9K6KvZrJ8LXRei/pubhtml?widget=true&amp;headers=false"
-          width="90%" height="400" style="border:none;"> -->
-        </iframe>
+        <iframe id="embeddedSpreadsheet" src="" height="400" width="90%"></iframe>
       </div>
         <!-- Download button -->
-        <a id="btn" href= downloadLink class="btn btn-primary position-absolute bottom">Download</a>
+        <a id="btn" class="btn btn-primary position-absolute bottom"
+           href="https://docs.google.com/spreadsheets/d/"
+           onclick="location.href=this.href+SPREADSHEET_ID+'/export?format=xlsx';return false;">
+           Download
+        </a>
+
     </main>
 </div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
       <script src="logout.js"></script>
+      <script>
+        var embedLink = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit?usp=sharing?widget=true&amp;headers=false`        
+        document.getElementById("embeddedSpreadsheet").src = embedLink;
+      </script>
     </body>
 </html>

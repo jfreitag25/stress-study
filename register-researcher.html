@@ -6,6 +6,7 @@
   <title>Register Page</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="form.css">
+  <link rel="stylesheet" href="home.css">
   <script
 		src="https://code.jquery.com/jquery-3.4.1.js"
 		integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
@@ -217,11 +218,11 @@
     }).then(function(response) {
       // Handle the results here (response.result has the parsed body).
       console.log("Response", response);
-
       // Store the spreadsheet ID in local storage
       var spreadsheetId = response.result.spreadsheetId;
-      localStorage.setItem('spreadsheetId', spreadsheetId);
-      console.log(spreadsheetId);
+      window.localStorage.setItem('spreadsheetId', spreadsheetId);
+      console.log("Spreadsheet ID: " + spreadsheetId);
+      console.log(window.localStorage.getItem('spreadsheetId'));
       }, function(err) {
         console.error("Execute error", err);
       });
@@ -229,7 +230,7 @@
 
     // Function to retrieve the spreadsheet ID from local storage
     function getSpreadsheetId() {
-      var spreadsheetId = localStorage.getItem('spreadsheetId');
+      var spreadsheetId = window.localStorage.getItem('spreadsheetId');
       return spreadsheetId;
     }
 
