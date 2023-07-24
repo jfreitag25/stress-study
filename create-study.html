@@ -31,7 +31,7 @@
         }
         // Add user data to spreadsheet
         if (studyID != "" && studyName != "" && creatorName != "") {
-            fetch("https://api.apispreadsheets.com/data/kRoqVhKOVuV6LF4x/", {
+            fetch("https://api.apispreadsheets.com/data/yXkXPcvTiuFORrDW/", {
             method: "POST",
             body: JSON.stringify({"data": {"Study_ID":studyID,"Study_Name":studyName,"Creator":creatorName}}),
             }).then(res =>{
