@@ -2,138 +2,43 @@
 <!DOCTYPE html>
 <html lang="en-us">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8" />
-  <title>Login Page</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="stylesheet" href="form.css">
-
-  <script>
-    // Read the rows in the spreadsheet, compare the login credentials against the rows and return an ID if it exists
-    function SubForm() {
-      // Hash function for password
-      function hash(string) {
-        var hash = 0;
-        if (string.length == 0) return hash;
-        for (x = 0; x <string.length; x++) {
-          ch = string.charCodeAt(x);
-          hash = ((hash <<5) - hash) + ch;
-          hash = hash & hash;
-        }
-      return hash;
-      }
-
-      var email = document.getElementById("se").value;
-      var password = hash(document.getElementById("sp").value); // Hash PW
-      var studyID = document.getElementById("si").value;
-
-      console.log(email);
-      console.log(password);
-      console.log(studyID);
-
-      // Fetch data from Users DB and Studies DB
-      async function getResponse() {
-        const UsersAPIKey = "h3BUx4gyjgxHR0H4"; // Update key as needed
-        const StudiesAPIKey = "kRoqVhKOVuV6LF4x"; // Update key as needed
-        const urlUsers = "https://api.apispreadsheets.com/data/Wq0906nh4QTFcDhm/"; // Update URL as needed
-        const urlStudies = "https://api.apispreadsheets.com/data/yXkXPcvTiuFORrDW/"; // Update URL as needed
-
-        // Initiate fetch calls from both spreadsheets at once
-        const responses = await Promise.all([
-          fetch(`${urlUsers}?query=select User_ID from ${UsersAPIKey} where User_Email='${email}' and User_PW='${password}'`),
-          fetch(`${urlStudies}?query=select Study_ID from ${StudiesAPIKey} where Study_ID='${studyID}'`)]);
-        // Validate responses
-        console.log(responses);
-        if (!responses[0].ok || !responses[1].ok) {
-          alert("Invalid login info");
-          throw new Error(`HTTP error! status: ${responses.status}`)
-        }
-        else {
-          const dataUser = await responses[0].json();
-          const dataStudy = await responses[1].json();
-          console.log("dataUser: " + dataUser);
-          console.log("dataStudy: " + dataStudy);
-
-          if (dataUser.data.length > 0 && dataStudy.data.length > 0) {
-              // Get user ID
-              var userId = dataUser.data[0].User_ID;
-              console.log("user id: " + userId);
-              var userLastName = dataUser.data[0].User_LastName;
-              var userFirstName = dataUser.data[0].User_FirstName;
-              // Store user ID in a cookie
-              document.cookie = "userId=" + userId;
-              console.log(document.cookie);
-              // Store user ID in local storage
-              window.localStorage.setItem('stress_analytics', userId);
-            alert("You're logged in!");
-
-              // Get study ID
-              var studyId = dataStudy.data[0].Study_ID;
-              console.log("study id: " + studyId);
-              // Update Users spreadsheet with study ID if it's empty
-              if (dataUser.data[0].Study_ID != "") {
-                fetch(urlUsers, {
-                method: "POST",
-                body: JSON.stringify({
-                  "data": {
-                    "User_ID": userId,
-                    "User_PW": password,
-                    "Study_ID": studyID,
-                    "User_Type": "student",
-                    "User_Email": email,
-                    "User_LastName": userLastName,
-                    "User_FirstName": userFirstName
-                  },
-                    "query": `select * from ${UsersAPIKey} where User_ID='${userId}'`}),
-                })
-                .then(res => {
-                    if (res.status === 201){
-                        window.location.href = "index.html"
-                    }
-                    else {
-                        alert("Invalid study ID");
-                    }
-                })
-              }
-          }
-        }
-
-      }
-      getResponse();
-  }
-  </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <title>Login Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="form.css">
 </head>
 
 <body>
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">LIT Study</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="login-student.html">Student</a>
-          <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a>
+        <a class="navbar-brand" href="#">LIT Study</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link active" aria-current="page" href="login-student.html">Student</a>
+                <a class="nav-link" aria-current="page" href="login-researcher.html">Researcher</a>
+            </div>
         </div>
-      </div>
     </div>
-  </nav>
+</nav>
 
-  <div id="login-step">
+<div id="login-step">
     <div class="heading">
-      <h1>Login as a student</h1>
-      <p>Please log in or create a new account below!</p>
+        <h1>Login as a student</h1>
+        <p>Please log in or create a new account below!</p>
     </div>
     <button class="submit" id="login">
-      <span class="text" role="status">Login/Sign up</span>
-      <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
+        <span class="text" role="status">Login/Sign up</span>
+        <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
     </button>
-  </div>
+</div>
 
-  <div id="complete-signup" style="display: none">
+<div id="complete-signup" style="display: none">
     <h1 class="heading">Please fill in the remaining information to complete your sign-up!</h1>
     <label for="fn" class="visually-hidden">First name</label>
     <input id="fn" type="text" placeholder="First Name" autocomplete="given-name" required>
@@ -142,26 +47,26 @@
     <input id="ln" type="text" placeholder="Last Name" autocomplete="family-name" required>
 
     <button class="submit" id="signup">
-      <span class="text" role="status">Complete sign up</span>
-      <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
+        <span class="text" role="status">Complete sign up</span>
+        <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
     </button>
-  </div>
+</div>
 
-  <div id="study-id-step" style="display:none">
+<div id="study-id-step" style="display:none">
     <h1 class="heading">Enter the study ID your researcher provided:</h1>
     <label for="si" class="visually-hidden">Study ID</label>
     <input id="si" type="text" placeholder="Study ID" autocomplete="off" required>
     <button class="submit" id="join-study">
-      <span class="text" role="status">Join Study</span>
-      <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
+        <span class="text" role="status">Join Study</span>
+        <span class="spinner spinner-border spinner-border-sm" role="status" style="display:none;"></span>
     </button>
-  </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-          crossorigin="anonymous"></script>
-  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
-  <script type="module" src="js/login_student.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+<script type="module" src="js/login_student.js"></script>
 </body>
 
 </html>
