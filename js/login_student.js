@@ -42,6 +42,7 @@ joinStudyButton.addEventListener("click", async (e) => {
     if (await doesStudyExist(studyID)) {
         setItem(USER_ID_FIELD, user.sub);
         setItem(STUDY_ID_FIELD, studyID);
+        window.location = "index.html"
     } else {
         alert("Something went wrong. Please double check that you entered in the study ID correctly!")
     }

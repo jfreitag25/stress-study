@@ -1,9 +1,7 @@
 const UsersAPIKey = "h3BUx4gyjgxHR0H4"; // Update key as needed
 const StudiesAPIKey = "kRoqVhKOVuV6LF4x"; // Update key as needed
 const urlUsers = "https://api.apispreadsheets.com/data/Wq0906nh4QTFcDhm/"; // Update URL as needed
-const urlStudies = "https://api.apispreadsheets.com/data/yXkXPcvTiuFORrDW/"; // Update URL as needed
-
-//TODO: Studies url broken
+const urlStudies = "https://api.apispreadsheets.com/data/9WmQa4UoTOdNYAG7/"; // Update URL as needed
 
 /**
  * Check if a user with the given id exists
