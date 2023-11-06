@@ -49,7 +49,6 @@ auth0.createAuth0Client({
 
             if (await auth0Client.isAuthenticated()) {
                 user = await auth0Client.getUser();
-                console.log(user);
 
                 // See if user has signed up already
                 if (await doesUserExists(user.sub)) {

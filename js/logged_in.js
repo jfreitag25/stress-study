@@ -4,8 +4,6 @@ auth0.createAuth0Client({
     domain: "dev-bob0zt3qosukwaoi.us.auth0.com",
     clientId: "33DVyyXx90bsLdPjVhP4szxvHBkUwyka",
 }).then(async (auth0Client) => {
-    console.log("Logged in!");
-
     const logout = () => {
         // Clear item
         clearItem(USER_ID_FIELD);
