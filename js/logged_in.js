@@ -12,7 +12,7 @@ auth0.createAuth0Client({
         // Log out of Auth0
         auth0Client.logout({
             logoutParams: {
-                returnTo: window.location.origin + '/login-student.html'
+                returnTo: new URL("login-student.html", window.location.href).href
             }
         });
     }
