@@ -12,7 +12,7 @@ auth0.createAuth0Client({
         // Log out of Auth0
         auth0Client.logout({
             logoutParams: {
-                returnTo: 'http://localhost:8000/login-student.html'
+                returnTo: window.location.origin + '/login-student.html'
             }
         });
     }
